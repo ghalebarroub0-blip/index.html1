@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>USDT Coins Mini App</title>
+
+<script src="https://alwingulla.com/act/files/micro.tag.min.js?z=1234567" data-zone="1234567" async defer></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+    user-select:none;
+    -webkit-tap-highlight-color:transparent;
+}
+
+body,html{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#0b1a24;
+}
+
+.app-container{
+    max-width:500px;
+    width:100%;
+    height:100vh;
+    margin:auto;
+    background:linear-gradient(135deg,#1a0933,#3b5c96);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px;
+    color:#fff;
+    position: relative;
+}
+
+.header-section{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    z-index: 10;
+}
+
+.level-info{
+    display:flex;
+    justify-content:space-between;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.progress-bar-container{
+    width:100%;
+    height:12px;
+    background:rgba(255,255,255,.2);
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    width:0%;
+    height:100%;
+    background:linear-gradient(90deg,#26a17b,#00ecc6);
+    transition: width 0.2s ease;
+}
+
+.score-container{
+    font-size:42px;
+    font-weight:bold;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:15px;
+    z-index: 10;
+}
+
+.score-container img{
+    width:42px;
+    height:42px;
+}
+
+.page-content{
+    flex-grow:1;
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    position:relative;
+}
+
+.character-circle{
+    width:240px;
+    height:240px;
+    border-radius:50%;
+    border:6px solid #00ecc6;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor:pointer;
+    transition: transform 0.05s ease;
+    box-shadow:0 0 30px rgba(0,236,198,.4);
+    background: #26a17b;
+    touch-action: manipulation;
+}
+
+.character-circle img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    pointer-events: none;
+}
+
+.character-circle:active{
+    transform: scale(0.92);
+}
+
+.ad-overlay {
+    display: none;
+    position: absolute;
+    width: 300px;
+    background: rgba(11, 26, 36, 0.98);
+    border: 2px solid #ffbc00;
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(255, 188, 0, 0.6);
+    z-index: 9999;
+    animation: popupIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.ad-overlay h3 {
+    color: #ffbc00;
+    margin-bottom: 12px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.ad-overlay p {
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: #e2e8f0;
+    line-height: 1.6;
+}
+
+.watch-ad-btn {
+    background: linear-gradient(90deg, #ffbc00, #ff8800);
+    color: #000;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: 0.2s;
+    margin-bottom: 10px;
+}
+
+.countdown-text {
+    font-size: 12px;
+    color: #a0aec0;
+    margin-top: 5px;
+}
+
+.stats-section{
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+    z-index: 10;
+}
+
+.energy-info{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    font-size:18px;
+    font-weight:bold;
+}
+
+.tap-effect{
+    position:absolute;
+    color:#00ecc6;
+    font-size:32px;
+    font-weight:bold;
+    pointer-events:none;
+    z-index: 999;
+    animation:floatUp .6s ease-out forwards;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+@keyframes floatUp{
+    0%{ opacity:1; transform:translateY(0) scale(1); }
+    100%{ opacity:0; transform:translateY(-100px) scale(0.8); }
+}
+
+.bottom-banner-ad{
+    width:100%;
+    min-height:60px;
+    background: linear-gradient(90deg, #1d2b44, #121c2c);
+    border-radius:12px;
+    margin-bottom:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:1px solid rgba(0,236,198,.3);
+    z-index: 10;
+    overflow: hidden;
+}
+
+.bottom-banner-ad p {
+    font-size: 13px;
+    font-weight: bold;
+    color: #00ecc6;
+}
+
+.bottom-nav{
+    width:100%;
+    background:rgba(11,26,36,.95);
+    border-radius:20px;
+    display:flex;
+    justify-content:space-around;
+    padding:12px;
+    z-index: 10;
+}
+
+.nav-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    color:#8fa1a8;
+    font-size:12px;
+    cursor:pointer;
+}
+
+.nav-item.active{ color:#00ecc6; }
+.nav-item i { font-size: 18px; margin-bottom: 4px; }
+.page-title{ font-size:24px; color:#00ecc6; margin-bottom:15px; }
+
+.balance-box{
+    width:100%;
+    background:rgba(255,255,255,.08);
+    padding:15px;
+    border-radius:15px;
+    text-align:center;
+}
+
+.wallet-connect-section, .withdraw-section {
+    width:100%;
+    margin-top:15px;
+    background:rgba(255,255,255,.05);
+    padding:15px;
+    border-radius:15px;
+    text-align:center;
+}
+
+.trust-btn {
+    background: #0b65c6;
+    color: white;
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.trust-btn.connected {
+    background: rgba(38, 161, 123, 0.2);
+    color: #00ecc6;
+    border: 1px solid #26a17b;
+    cursor: default;
+}
+
+.wallet-status-text {
+    font-size: 12px;
+    color: #a0aec0;
+    margin-top: 8px;
+    font-family: monospace;
+}
+
+.address-box { display: none; margin-top: 12px; text-align: right; }
+.address-label { font-size: 13px; color: #00ecc6; margin-bottom: 5px; display: block; }
+.address-input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(0,236,198,.4); background: rgba(11,26,36,.8); color: #fff; text-align: center; }
+.withdraw-btn{ margin-top:10px; background:#25d366; color:#fff; padding:12px; border-radius:10px; font-weight: bold; cursor: pointer; border: none; width: 100%; font-size: 16px; }
+.tab-page{ display:none; width:100%; }
+.tab-page.active{ display:flex; flex-direction:column; align-items:center; }
+</style>
+</head>
+
+<body>
+
+<div class="app-container" id="appContainer">
+
+    <div class="header-section">
+        <div class="level-info">
+            <span id="rabbitRank">المبتدئ (USDT Coins)</span>
+            <span id="currentLevelTxt">المستوى 1/100</span>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="levelProgress"></div>
+        </div>
+    </div>
+
+    <div class="score-container">
+        <span id="totalCoins">0</span>
+        <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" alt="USDT">
+    </div>
+
+    <div class="page-content">
+        <div class="tab-page active" id="explorePage">
+            <div class="character-circle" id="character">
+                <img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/usdt.png" alt="USDT Button">
+            </div>
+
+            <div id="adOverlay" class="ad-overlay">
+                <h3 id="adPopupTitle">🔒 انتهت طاقة الكبس المتاحة!</h3>
+                <p id="adPopupDesc">لقد استهلكت كبساتك الحالية. شاهد إعلان فيديو مدته 30 ثانية لشحن <b>+30 كبسة إضافية فوراً</b> ومتابعة جمع أرباح USDT!</p>
+                <button class="watch-ad-btn" id="adActionBtn" onclick="openMonetagRewardedAd()">🎬 مشاهدة إعلان (30 ثانية)</button>
+                <div class="countdown-text" id="countdownTxt">الوقت المتبقي للتجديد التلقائي المجاني: --:--:--</div>
+            </div>
+        </div>
+
+        <div class="tab-page" id="walletPage">
+            <div class="page-title">المحفظة والأرباح</div>
+            <div class="balance-box">
+                <p>رصيدك الحالي</p>
+                <h2 id="usdtBalance">0.00$</h2>
+                <p style="font-size:12px;color:#00ecc6; margin-top:5px;">كل 15,000 نقطة = 1.00$ دولار أمريكي</p>
+            </div>
+
+            <div class="wallet-connect-section">
+                <p style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">ربط المحفظة الإلكترونية</p>
+                <button id="connectTrustBtn" class="trust-btn" onclick="connectTrustWalletLocal()">
+                    <i class="fa-solid fa-wallet"></i> ربط محفظة Trust Wallet
+                </button>
+                <div id="walletStatus" class="wallet-status-text">المحفظة غير متصلة حالياً</div>
+            </div>
+
+            <div class="withdraw-section">
+                <p style="font-size: 13px; color: #ffbc00;">⚠️ الحد الأدنى للسحب هو: <b>5.00$ دولار</b></p>
+                <div id="addressBox" class="address-box">
+                    <label class="address-label">عنوان محفظتك (USDT - شبكة BNB Smart Chain / BEP20):</label>
+                    <input type="text" id="usdtBnbAddress" class="address-input" placeholder="أدخل أو ألصق عنوان المحفظة هنا...">
+                </div>
+                <button class="withdraw-btn" id="withdrawBtn" onclick="processWithdraw()">طلب سحب الأرباح</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="stats-section">
+        <div class="energy-info">⚡ <span id="currentEnergy">500</span>/500</div>
+    </div>
+
+    <div class="bottom-banner-ad">
+        <p><i class="fa-solid fa-shield-halved"></i> نظام أرباح USDT مؤمن بالكامل</p>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('explore',this)">
+            <i class="fa-solid fa-compass"></i><span>استكشف</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('wallet',this)">
+            <i class="fa-solid fa-wallet"></i><span>المحفظة</span>
+        </div>
+    </div>
+</div>
+
+<script>
+const character = document.getElementById('character');
+const totalCoinsEl = document.getElementById('totalCoins');
+const currentEnergyEl = document.getElementById('currentEnergy');
+const usdtBalanceEl = document.getElementById('usdtBalance');
+const levelProgress = document.getElementById('levelProgress');
+const currentLevelTxt = document.getElementById('currentLevelTxt');
+const rabbitRank = document.getElementById('rabbitRank');
+const appContainer = document.getElementById('appContainer');
+const connectTrustBtn = document.getElementById('connectTrustBtn');
+const walletStatus = document.getElementById('walletStatus');
+const withdrawBtn = document.getElementById('withdrawBtn');
+const addressBox = document.getElementById('addressBox');
+const usdtBnbAddressInput = document.getElementById('usdtBnbAddress');
+const adOverlay = document.getElementById('adOverlay');
+const countdownTxt = document.getElementById('countdownTxt');
+const adPopupTitle = document.getElementById('adPopupTitle');
+const adPopupDesc = document.getElementById('adPopupDesc');
+const adActionBtn = document.getElementById('adActionBtn');
+
+// --- تم إصلاح المشكلة هنا وتوفير المتغيرات الأساسية الناقصة ---
+const ratePerDollar = 15000;
+const coinsPerLevel = 5000;
+const minWithdrawAmount = 5.0;
+
+let coins = parseInt(localStorage.getItem('coins')) || 0;
+let energy = parseInt(localStorage.getItem('energy'));
+let lastLockTime = localStorage.getItem('lastLockTime') || null;
+let isWalletConnected = localStorage.getItem('isWalletConnected') === 'true';
+let savedUserAddress = localStorage.getItem('userUsdtBnbAddress') || '';
+
+let currentAdType = "lock"; 
+
+if (isNaN(energy)) {
+    energy = 500; 
+}
+
+if (isWalletConnected) setWalletUiConnected();
+if (savedUserAddress) usdtBnbAddressInput.value = savedUserAddress;
+
+checkDailyReset();
+updateUI();
+
+setInterval(() => {
+    if (adOverlay.style.display !== 'block' && document.getElementById('explorePage').classList.contains('active')) {
+        currentAdType = "timer";
+        adPopupTitle.innerHTML = "🔥 إعلان دوري ممول";
+        adPopupDesc.innerHTML = "قم بزيارة راعي اللعبة الرسمي الآن لتخطي الإعلان والعودة لمتابعة النقر فوراً!";
+        adActionBtn.innerHTML = "🎬 تخطي الإعلان الممول";
+        countdownTxt.style.display = 'none'; 
+        
+        character.style.display = 'none';
+        adOverlay.style.display = 'block';
+        
+        if (typeof window.OT_Interstital !== 'undefined') {
+            window.OT_Interstital.show();
+        }
+    }
+}, 30000); 
+
+function checkDailyReset() {
+    if (lastLockTime) {
+        const now = new Date().getTime();
+        const timePassed = now - parseInt(lastLockTime);
+        const twentyFourHours = 24 * 60 * 60 * 1000;
+
+        if (timePassed >= twentyFourHours) {
+            energy = 500; 
+            localStorage.removeItem('lastLockTime');
+            lastLockTime = null;
+            adOverlay.style.display = 'none';
+            character.style.display = 'flex';
+            saveData();
+        } else {
+            if (energy <= 0) {
+                showLockScreen();
+            }
+        }
+    }
+}
+
+function showLockScreen() {
+    currentAdType = "lock";
+    adPopupTitle.innerHTML = "🔒 انتهت طاقة الكبس المتاحة!";
+    adPopupDesc.innerHTML = "لقد استهلكت كبساتك الحالية. شاهد إعلان فيديو مدته 30 ثانية لشحن <b>+30 كبسة إضافية فوراً</b>، أو انتظر التجديد المجاني.";
+    adActionBtn.innerHTML = "🎬 مشاهدة إعلان (+30 كبسة)";
+    countdownTxt.style.display = 'block';
+    character.style.display = 'none';
+    adOverlay.style.display = 'block';
+    startCountdownUpdate();
+}
+
+function startCountdownUpdate() {
+    const timerInterval = setInterval(() => {
+        if (!lastLockTime || currentAdType !== "lock") { clearInterval(timerInterval); return; }
+        
+        const now = new Date().getTime();
+        const timePassed = now - parseInt(lastLockTime);
+        const twentyFourHours = 24 * 60 * 60 * 1000;
+        const timeLeft = twentyFourHours - timePassed;
+
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            checkDailyReset();
+            updateUI();
+        } else {
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            countdownTxt.innerText = `الوقت المتبقي للتجديد التلقائي المجاني: ${hours}:${minutes}:${seconds}`;
+        }
+    }, 1000);
+}
+
+character.addEventListener('pointerdown', (e) => {
+    if (energy <= 0) {
+        lockGame();
+        return;
+    }
+
+    coins++;
+    energy--;
+
+    saveData();
+    updateUI();
+    createTapEffect(e.clientX, e.clientY);
+    
+    if (energy <= 0) lockGame();
+});
+
+function lockGame() {
+    if (!localStorage.getItem('lastLockTime')) {
+        localStorage.setItem('lastLockTime', new Date().getTime().toString());
+        lastLockTime = localStorage.getItem('lastLockTime');
+    }
+    showLockScreen();
+}
+
+function openMonetagRewardedAd() {
+    window.open("https://vukpauto.com/zone/smartlink/your_id", "_blank");
+
+    setTimeout(() => {
+        if (currentAdType === "lock") {
+            energy = 30; 
+            alert("تم التحقق! تمت إضافة +30 كبسة إضافية لطاقتك.");
+        } else {
+            alert("شكراً لك! تم فتح الشاشة ومتابعة اللعب.");
+        }
+        
+        adOverlay.style.display = 'none';
+        character.style.display = 'flex';
+        saveData();
+        updateUI();
+    }, 1500); 
+}
+
+function saveData(){
+    localStorage.setItem('coins', coins);
+    localStorage.setItem('energy', energy);
+}
+
+function connectTrustWalletLocal() {
+    if (isWalletConnected) return;
+    connectTrustBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري ربط Trust Wallet...';
+    setTimeout(() => {
+        localStorage.setItem('isWalletConnected', 'true');
+        isWalletConnected = true;
+        setWalletUiConnected();
+        alert('تم ربط حسابك بمنصة Trust Wallet بنجاح داخل التطبيق!');
+        updateUI();
+    }, 1000);
+}
+
+function setWalletUiConnected() {
+    connectTrustBtn.className = "trust-btn connected";
+    connectTrustBtn.innerHTML = '<i class="fa-solid fa-circle-check"></i> متصل بـ Trust Wallet';
+    connectTrustBtn.style.pointerEvents = 'none';
+    walletStatus.innerHTML = `حالة المحفظة: <b style="color:#00ecc6;">متصلة وجاهزة لاستلام الأرباح</b>`;
+}
+
+function updateUI(){
+    totalCoinsEl.textContent = coins.toLocaleString();
+    currentEnergyEl.textContent = energy;
+
+    let currentDollars = (coins / ratePerDollar);
+    usdtBalanceEl.textContent = `${currentDollars.toFixed(2)}$`;
+
+    let currentLevel = Math.floor(coins / coinsPerLevel) + 1;
+    currentLevelTxt.textContent = `المستوى ${currentLevel}/100`;
+
+    let progress = ((coins % coinsPerLevel) / coinsPerLevel) * 100;
+    levelProgress.style.width = `${progress}%`;
+
+    if (currentDollars >= minWithdrawAmount && isWalletConnected) {
+        addressBox.style.display = 'block';
+        withdrawBtn.style.background = '#25d366';
+    } else {
+        addressBox.style.display = 'none';
+        withdrawBtn.style.background = '#555';
+    }
+
+    if(currentLevel <= 10){ rabbitRank.textContent = "المبتدئ (USDT Coins)"; } 
+    else if(currentLevel <= 30){ rabbitRank.textContent = "المحترف (Silver USDT)"; } 
+    else if(currentLevel <= 60){ rabbitRank.textContent = "المستثمر (Gold USDT)"; } 
+    else if(currentLevel <= 90){ rabbitRank.textContent = "الخبير (Diamond USDT)"; } 
+    else{ rabbitRank.textContent = "ملك USDT 👑"; }
+}
+
+function processWithdraw() {
+    if (!isWalletConnected) { alert("الرجاء الضغط على زر 'ربط محفظة Trust Wallet' أولاً!"); return; }
+    let currentDollars = (coins / ratePerDollar);
+    if (currentDollars < minWithdrawAmount) { alert(`عذراً، لم تصل للحد الأدنى بعد رصيدك الحالي هو (${currentDollars.toFixed(2)}$).`); return; }
+
+    const userAddress = usdtBnbAddressInput.value.trim();
+    if (userAddress === "") { alert("الرجاء إدخال عنوان محفظة USDT (شبكة BNB) الخاص بك!"); usdtBnbAddressInput.focus(); return; }
+
+    localStorage.setItem('userUsdtBnbAddress', userAddress);
+    const pointsToDeduct = ratePerDollar * minWithdrawAmount; 
+    
+    if (confirm(`هل أنت متأكد من سحب 5.00$ وتحويلها إلى:\n${userAddress}؟`)) {
+        coins -= pointsToDeduct;
+        saveData();
+        updateUI();
+        alert(`تم تأكيد المعاملة بنجاح! ستصلك الـ 5$ قريباً.`);
+    }
+}
+
+function createTapEffect(x, y){
+    const effect = document.createElement('div');
+    effect.classList.add('tap-effect');
+    effect.innerText = '+1';
+    const rect = appContainer.getBoundingClientRect();
+    effect.style.left = `${x - rect.left - 15}px`; 
+    effect.style.top = `${y - rect.top - 20}px`;
+    appContainer.appendChild(effect);
+    setTimeout(() => { effect.remove(); }, 600);
+}
+
+function switchTab(tab, el){
+    document.querySelectorAll('.nav-item').forEach(item => { item.classList.remove('active'); });
+    el.classList.add('active');
+    document.querySelectorAll('.tab-page').forEach(page => { page.classList.remove('active'); });
+    if(tab === "explore") document.getElementById('explorePage').classList.add('active');
+    if(tab === "wallet") document.getElementById('walletPage').classList.add('active');
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
